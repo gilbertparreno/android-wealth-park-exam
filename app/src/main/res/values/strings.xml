@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">android-wealth-park-exam</string>
+    <string name="app_name">Wealthpark Exam</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
