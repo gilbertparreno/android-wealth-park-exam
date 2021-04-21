@@ -13,12 +13,15 @@ import androidx.lifecycle.ViewModelStore
 import com.wealthpark.exam.core.extensions.getLastFragmentTag
 import com.wealthpark.exam.core.extensions.logDebug
 import com.wealthpark.exam.core.utils.ViewModelUtils
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.EventBusException
 import javax.inject.Inject
 
 abstract class BaseFragment<VM : ViewModel, V : BaseFragmentView> : Fragment(),
     LifecycleOwner {
 
     @Inject lateinit var viewModel: VM
+    @Inject lateinit var eventBus: EventBus
     lateinit var contentView: V
 
     abstract fun inject()
@@ -57,6 +60,19 @@ abstract class BaseFragment<VM : ViewModel, V : BaseFragmentView> : Fragment(),
             lastFragment?.childFragmentManager?.backStackEntryCount ?: 0 > 0 -> false
             else -> (lastFragment as? BaseFragment<*, *>)?.onBackPressed() ?: false
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        try {
+            eventBus.register(this)
+        } catch (e: EventBusException) {
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        eventBus.unregister(this)
     }
 
     override fun onDestroy() {

@@ -67,11 +67,13 @@ dependencies {
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    implementation "androidx.room:room-runtime:2.2.6"
-    kapt "androidx.room:room-compiler:2.2.6"
-    implementation "androidx.room:room-ktx:2.2.6"
+    implementation 'androidx.room:room-runtime:2.2.6'
+    kapt 'androidx.room:room-compiler:2.2.6'
+    implementation 'androidx.room:room-ktx:2.2.6'
 
     implementation 'org.greenrobot:eventbus:3.2.0'
+
+    implementation 'io.coil-kt:coil:1.2.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.10.6'

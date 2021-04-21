@@ -13,6 +13,10 @@ import com.wealthpark.exam.R
 import com.wealthpark.exam.core.utils.ScreenHelper
 import com.google.android.material.snackbar.Snackbar
 
+fun View.dp(value: Int): Int = context.dp(value)
+fun View.dp(value: Float): Float = context.dp(value)
+fun View.sp(value: Float): Float = context.sp(value)
+
 fun View.getCompatDrawable(@DrawableRes id: Int): Drawable? {
     return context.getCompatDrawable(id)
 }

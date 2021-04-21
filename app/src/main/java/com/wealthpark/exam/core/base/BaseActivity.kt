@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import com.wealthpark.exam.core.extensions.getLastFragmentTag
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.EventBusException
 import javax.inject.Inject
 
 abstract class BaseActivity(
@@ -24,7 +25,10 @@ abstract class BaseActivity(
 
     override fun onStart() {
         super.onStart()
-        eventBus.register(this)
+        try {
+            eventBus.register(this)
+        } catch (e: EventBusException) {
+        }
     }
 
     override fun onStop() {

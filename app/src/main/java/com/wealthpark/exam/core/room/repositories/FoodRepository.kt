@@ -10,7 +10,10 @@ import javax.inject.Singleton
 class FoodRepository @Inject constructor(
     private val foodDao: FoodDao
 ) : BaseRoomRepository<Food, FoodDao>(foodDao) {
-    suspend fun insertFoods(vararg foods: Food) = foodDao.insertFoods(*foods)
+
+    override suspend fun findAll() = foodDao.findAll()
+
+    override suspend fun find(id: Int) = foodDao.find(id)
+
     suspend fun getFoodByName(name: String) = foodDao.getFoodByName(name)
-    suspend fun updateFoods(vararg foods: Food) = foodDao.updateFoods(*foods)
 }

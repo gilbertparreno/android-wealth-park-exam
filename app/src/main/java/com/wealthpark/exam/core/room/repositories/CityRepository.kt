@@ -10,7 +10,10 @@ import javax.inject.Singleton
 class CityRepository @Inject constructor(
     private val cityDao: CityDao
 ) : BaseRoomRepository<City, CityDao>(cityDao) {
-    suspend fun insertCities(vararg cities: City) = cityDao.insertCities(*cities)
+
+    override suspend fun findAll(): List<City> = cityDao.findAll()
+
+    override suspend fun find(id: Int) = cityDao.find(id)
+
     suspend fun getCityByName(name: String) = cityDao.getCityByName(name)
-    suspend fun updateCities(vararg cities: City) = cityDao.updateCities(*cities)
 }

@@ -1,6 +1,6 @@
 package com.wealthpark.exam.core.events.managers
 
-import com.wealthpark.exam.core.events.FoodsAndCitiesSynchronizedEvent
+import com.wealthpark.exam.core.events.FoodsAndCitiesSynchronizationEvent
 import com.wealthpark.exam.core.networking.entities.FoodsAndCitiesApi
 import com.wealthpark.exam.core.networking.repositories.AppRepository
 import com.wealthpark.exam.core.room.entities.City
@@ -8,7 +8,6 @@ import com.wealthpark.exam.core.room.entities.Food
 import com.wealthpark.exam.core.room.repositories.CityRepository
 import com.wealthpark.exam.core.room.repositories.FoodRepository
 import org.greenrobot.eventbus.EventBus
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,17 +22,14 @@ class FoodsAndCitiesSynchronizeManager @Inject constructor(
     private val cityRepository: CityRepository
 ) {
 
-    suspend fun synchronize() {
+    suspend fun synchronize(postSyncEvent: Boolean = true) {
         appRepository.getFoodsAndCities().also {
-
             synchronizeFoods(it.foods)
             synchronizeCities(it.cities)
-            val foods = foodRepository.findAll()
-            val cities = cityRepository.findAll()
-            Timber.d("")
         }
-//        foodDao.insertFoods(*foodsAndCities.foods.toTypedArray())
-        eventBus.postSticky(FoodsAndCitiesSynchronizedEvent())
+        if (postSyncEvent) {
+            eventBus.postSticky(FoodsAndCitiesSynchronizationEvent(true))
+        }
     }
 
     private suspend fun synchronizeFoods(foodsApi: List<FoodApi>) {
@@ -49,8 +45,15 @@ class FoodsAndCitiesSynchronizeManager @Inject constructor(
                 )
             }
         }
-        foodRepository.updateFoods(*forUpdate.toTypedArray())
-        foodRepository.insertFoods(*forInsert.toTypedArray())
+        foodRepository.update(*forUpdate.toTypedArray())
+        foodRepository.insert(*forInsert.toTypedArray())
+        val forDeletion = foodRepository.findAll()
+            .filter { localFood ->
+                foodsApi.firstOrNull {
+                    it.name == localFood.name && it.imageUrl == localFood.imageUrl
+                } == null
+            }
+        foodRepository.delete(*forDeletion.toTypedArray())
     }
 
     private suspend fun synchronizeCities(citiesAPi: List<CityApi>) {
@@ -75,7 +78,14 @@ class FoodsAndCitiesSynchronizeManager @Inject constructor(
                 )
             }
         }
-        cityRepository.updateCities(*forUpdate.toTypedArray())
-        cityRepository.insertCities(*forInsert.toTypedArray())
+        cityRepository.update(*forUpdate.toTypedArray())
+        cityRepository.insert(*forInsert.toTypedArray())
+        val forDeletion = cityRepository.findAll()
+            .filter { localCity ->
+                citiesAPi.firstOrNull {
+                    it.name == localCity.name && it.imageUrl == localCity.imageUrl && it.description == localCity.description
+                } == null
+            }
+        cityRepository.delete(*forDeletion.toTypedArray())
     }
 }
