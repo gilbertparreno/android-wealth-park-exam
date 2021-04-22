@@ -41,14 +41,14 @@ class FoodsAndCitiesAdapter(
                     cityImage.load(item.imageUrl)
                     cityName.text = item.name
                     cityDescription.text = item.description
-                    setDebounceClickListener {
+                    cityCardView.setDebounceClickListener {
                         onItemClicked?.invoke(item)
                     }
                 }
                 is FoodListItem -> {
                     foodImage.load(item.imageUrl)
                     foodName.text = item.name
-                    setDebounceClickListener {
+                    foodCardView.setDebounceClickListener {
                         onItemClicked?.invoke(item)
                     }
                 }
