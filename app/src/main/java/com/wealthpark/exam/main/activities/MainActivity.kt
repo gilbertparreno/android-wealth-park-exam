@@ -4,10 +4,9 @@ import android.os.Bundle
 import com.wealthpark.exam.R
 import com.wealthpark.exam.WealthParkApplication
 import com.wealthpark.exam.core.base.BaseActivity
-import com.wealthpark.exam.core.events.FoodsAndCitiesSynchronizedEvent
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import timber.log.Timber
+import com.wealthpark.exam.core.extensions.addFragment
+import com.wealthpark.exam.core.extensions.getFragmentTag
+import com.wealthpark.exam.main.fragments.MainFragment
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
@@ -17,10 +16,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEvent(event: FoodsAndCitiesSynchronizedEvent) {
-        Timber.d("")
+        if (supportFragmentManager.fragments.isEmpty()) {
+            supportFragmentManager.apply {
+                beginTransaction()
+                    .addFragment(
+                        containerId = R.id.mainContainer,
+                        fragmentClass = MainFragment::class.java,
+                        addToBackStack = false
+                    ).commit()
+            }
+            rootFragmentTag = getFragmentTag(MainFragment::class.java)
+        }
     }
 }

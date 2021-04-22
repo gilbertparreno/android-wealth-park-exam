@@ -1,6 +1,7 @@
 package com.wealthpark.exam.core.room.daos
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
 import com.wealthpark.exam.core.room.base.BaseRoomDao
 import com.wealthpark.exam.core.room.entities.Food
 
@@ -8,17 +9,11 @@ import com.wealthpark.exam.core.room.entities.Food
 interface FoodDao : BaseRoomDao<Food> {
 
     @Query("SELECT * FROM food")
-    override suspend fun findAll(): List<Food>
+    suspend fun findAll(): List<Food>
 
     @Query("SELECT * FROM food WHERE id = :id")
-    override suspend fun find(id: Int): Food?
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertFoods(vararg foods: Food)
+    suspend fun find(id: Int): Food?
 
     @Query("SELECT * FROM food WHERE name = :name")
     suspend fun getFoodByName(name: String): Food?
-
-    @Update(onConflict = OnConflictStrategy.ABORT)
-    suspend fun updateFoods(vararg foods: Food)
 }

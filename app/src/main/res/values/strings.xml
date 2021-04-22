@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Wealthpark Exam</string>
     <string name="dismiss">Dismiss</string>
+    <string name="error_no_data_found">No data found.</string>
+    <string name="generic_error">Oops! Something went wrong</string>
+    <string name="main_cities_header_label">Main Cities in Japan</string>
+    <string name="main_popular_food_header_label">Main Popular Japanese Food</string>
 </resources>

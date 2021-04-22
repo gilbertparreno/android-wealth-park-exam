@@ -1,6 +1,7 @@
 package com.wealthpark.exam.core.room.daos
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
 import com.wealthpark.exam.core.room.base.BaseRoomDao
 import com.wealthpark.exam.core.room.entities.City
 
@@ -8,17 +9,11 @@ import com.wealthpark.exam.core.room.entities.City
 interface CityDao : BaseRoomDao<City> {
 
     @Query("SELECT * FROM city")
-    override suspend fun findAll(): List<City>
+    suspend fun findAll(): List<City>
 
     @Query("SELECT * FROM city WHERE id = :id")
-    override suspend fun find(id: Int): City?
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertCities(vararg cities: City)
+    suspend fun find(id: Int): City?
 
     @Query("SELECT * FROM city WHERE name = :name")
     suspend fun getCityByName(name: String): City?
-
-    @Update(onConflict = OnConflictStrategy.ABORT)
-    suspend fun updateCities(vararg cities: City)
 }
