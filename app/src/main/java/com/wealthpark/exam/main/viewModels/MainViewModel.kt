@@ -10,6 +10,8 @@ import com.wealthpark.exam.core.providers.CoroutineContextProvider
 import com.wealthpark.exam.core.room.repositories.CityRepository
 import com.wealthpark.exam.core.room.repositories.FoodRepository
 import com.wealthpark.exam.main.entities.MainListData
+import com.wealthpark.exam.main.factories.CityLocal
+import com.wealthpark.exam.main.factories.FoodLocal
 import com.wealthpark.exam.main.factories.MainFactory
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -31,7 +33,9 @@ class MainViewModel @Inject constructor(
                 if (!ignoreUpdatesFromApi) {
                     foodsAndCitiesSynchronizeManager.synchronize(false)
                 }
-                getMainDataFromLocal()
+                val foods = foodRepository.findAll()
+                val cities = cityRepository.findAll()
+                getMainDataFromLocal(foods, cities)
             },
             onSuccess = {
                 statusEvent.value = TaskStatus.success(it)
@@ -42,10 +46,13 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private suspend fun getMainDataFromLocal(): List<MainListData> {
+    private fun getMainDataFromLocal(
+        foods: List<FoodLocal>,
+        cities: List<CityLocal>
+    ): List<MainListData> {
         return MainFactory.createFoodAndCitiesFromLocal(
-            foodRepository.findAll(),
-            cityRepository.findAll()
+            foods,
+            cities
         )
     }
 }
