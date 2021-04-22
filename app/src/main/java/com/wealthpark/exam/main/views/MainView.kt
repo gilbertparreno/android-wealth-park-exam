@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_main.view.*
 
 interface MainViewDelegate {
     fun onRefreshList()
+    fun onItemClicked(item: MainListData)
 }
 
 class MainView(context: Context) : BaseFragmentView(context) {
@@ -22,7 +23,9 @@ class MainView(context: Context) : BaseFragmentView(context) {
         }
         get() = swipeRefreshLayout.isRefreshing
 
-    private val adapter = FoodsAndCitiesAdapter()
+    private val adapter = FoodsAndCitiesAdapter { item ->
+        delegate?.onItemClicked(item)
+    }
 
     init {
         inflate(context, R.layout.view_main, this)

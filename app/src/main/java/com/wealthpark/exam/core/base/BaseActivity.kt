@@ -23,6 +23,16 @@ abstract class BaseActivity(
         super.onCreate(savedInstanceState)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("root_fragment_tag", rootFragmentTag)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        rootFragmentTag = savedInstanceState.getString("root_fragment_tag", null)
+    }
+
     override fun onStart() {
         super.onStart()
         try {
@@ -47,12 +57,12 @@ abstract class BaseActivity(
         if (rootFragmentManager.backStackEntryCount > 0) {
             var childFragment = rootFragmentManager.findFragmentByTag(
                 rootFragmentManager.getLastFragmentTag()
-            ) as? BaseFragment<*, *>
+            ) as? BaseFragment<*>
             while (childFragment?.onBackPressed() == false) {
                 childFragment = childFragment.childFragmentManager
                     .findFragmentByTag(
                         childFragment.childFragmentManager.getLastFragmentTag()
-                    ) as? BaseFragment<*, *>
+                    ) as? BaseFragment<*>
             }
         } else {
             super.onBackPressed()
